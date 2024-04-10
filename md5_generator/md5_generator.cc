@@ -20,7 +20,7 @@ bool md5_file(const char *file, char checksum[33])
 	return true;
 }
 
-int main(char *argc, int argv)
+int main(int argc, char *argv[])
 {
 	return 0;
 }
