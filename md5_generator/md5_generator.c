@@ -106,7 +106,7 @@ int file_md5(const char *filename)
 	return 0;
 }
 
-int get_file_type(const char *path)
+PathType get_file_type(const char *path)
 {
 #ifdef _WIN32
 	DWORD attrs = GetFileAttributes(path);
@@ -123,8 +123,8 @@ int get_file_type(const char *path)
 	}
 	else
 	{
-		perror("GetFileAttributes");
-		return -1;
+		fprintf(stderr, "Failed to get file attributes: %s\n", path);
+		exit(EXIT_FAILURE);
 	}
 #elif __linux__
 	struct stat st;
@@ -145,13 +145,13 @@ int get_file_type(const char *path)
 	}
 	else
 	{
-		perror("stat");
-		return -1;
+		fprintf(stderr, "Failed to get file attributes: %s\n", path);
+		exit(EXIT_FAILURE);
 	}
 #endif
 }
 
-int traverse_directory_files(const char *path)
+void traverse_directory_files(const char *path)
 {
 #ifdef _WIN32
 	char search_path[MAX_PATH_LENGTH];
@@ -161,7 +161,7 @@ int traverse_directory_files(const char *path)
 	HANDLE handle = FindFirstFile(search_path, &find_data);
 	if (handle == INVALID_HANDLE_VALUE)
 	{
-		perror("FindFirstFile");
+		fprintf(stderr, "Failed to find first file in directory: %s\n", path);
 		exit(EXIT_FAILURE);
 	}
 
@@ -189,7 +189,7 @@ int traverse_directory_files(const char *path)
 	DIR *dir = opendir(path);
 	if (dir == NULL)
 	{
-		perror("opendir");
+		fprintf(stderr, "Failed to open directory: %s\n", path);
 		exit(EXIT_FAILURE);
 	}
 
@@ -220,12 +220,7 @@ int traverse_directory_files(const char *path)
 int all_files_md5(const char *path)
 {
 	int type;
-	if ((type = get_file_type(path)) < 0)
-	{
-		fprintf(stderr, "Error: Invalid path.\n");
-		exit(EXIT_FAILURE);
-	}
-	if (type == PATH_DIRECTORY)
+	if ((type = get_file_type(path)) == PATH_DIRECTORY)
 	{
 		traverse_directory_files(path);
 	}
@@ -235,7 +230,7 @@ int all_files_md5(const char *path)
 	}
 	else
 	{
-		fprintf(stderr, "Error: Unknown file type.\n");
+		fprintf(stderr, "Invalid file path: %s\n", path);
 		exit(EXIT_FAILURE);
 	}
 	return 0;
@@ -255,7 +250,7 @@ void handle_argument(ArgumentType arg_type, const char *arg_value)
 		all_files_md5(arg_value);
 		exit(EXIT_SUCCESS);
 	default:
-		fprintf(stderr, "Error: Unknown option.\n");
+		fprintf(stderr, "Unknown option.\n");
 		print_help();
 		exit(EXIT_FAILURE);
 	}
@@ -265,7 +260,7 @@ int main(int argc, char *argv[])
 {
 	if (argc < 2)
 	{
-		fprintf(stderr, "Error: No arguments provided.\n");
+		fprintf(stderr, "No arguments provided.\n");
 		print_help();
 		return EXIT_FAILURE;
 	}
@@ -281,6 +276,7 @@ int main(int argc, char *argv[])
 			}
 			else
 			{
+				fprintf(stderr, "No path specified\n");
 				print_help();
 				return EXIT_FAILURE;
 			}
@@ -289,6 +285,7 @@ int main(int argc, char *argv[])
 		{
 			if (argc != 2)
 			{
+				fprintf(stderr, "Invalid usage\n");
 				print_help();
 				return EXIT_FAILURE;
 			}

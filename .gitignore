@@ -2,8 +2,6 @@
 
 *.exe
 
-*
+md5_generator
 
 .vscode
-
-!Makefile
