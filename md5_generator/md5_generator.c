@@ -57,7 +57,7 @@ void print_help()
 	printf("Options:\n");
 	printf("  -h, --help                Display this help message\n");
 	printf("  -v, --version             Display version information\n");
-	printf("  -p, --path <path>     Specify the path of the file or folder\n");
+	printf("  -p, --path <path>     	Specify the path of the file or folder\n");
 }
 
 ArgumentType get_argument_type(const char *arg)
