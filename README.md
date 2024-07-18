@@ -10,7 +10,7 @@ This program generates MD5 digests for a single file or all files in a folder. I
 
 ### Usage
 
-  `md5_generator [OPTIONS]`
+  `unamd5 [OPTIONS]`
 
 ### Options
 
@@ -22,4 +22,4 @@ This program generates MD5 digests for a single file or all files in a folder. I
 
 - To generate MD5 digest for a single file:
   
-  `md5_generator -p /path/to/file` or `md5_generator /path/to/file`
+  `unamd5 -p /path/to/file` or `unamd5 /path/to/file`
